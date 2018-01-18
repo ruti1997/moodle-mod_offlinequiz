@@ -122,6 +122,16 @@ class offlinequiz_answer_pdf extends offlinequiz_pdf {
             }
 
         }
+        $lang = current_language();
+        if($lang == 'he'){
+                $direction = 'R';
+                $group = 90;
+        }
+        else{
+                $direction = 'L';
+                 $group = 20;
+        }
+
         // Print the top left fixation cross.
         $this->Line(11, 12, 14, 12);
         $this->Line(12.5, 10.5, 12.5, 13.5);
@@ -135,12 +145,12 @@ class offlinequiz_answer_pdf extends offlinequiz_pdf {
         $this->Cell(90, 6, offlinequiz_str_html_pdf(get_string('forautoanalysis',  'offlinequiz')), 0, 1, 'C');
         $this->Ln(2);
         $this->SetFont('FreeSans', '', 8);
-        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('firstname')).":", 1, 0, 'L');
+        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('firstname')).":", 1, 0, $direction);
         $this->Cell(29, 7, ' '.offlinequiz_str_html_pdf(get_string('invigilator',  'offlinequiz')), 0, 1, 'C');
-        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('lastname')).":", 1, 1, 'L');
-        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('signature',  'offlinequiz')).":", 1, 1, 'L');
+        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('lastname')).":", 1, 1, $direction);
+        $this->Cell(90, 7, ' '.offlinequiz_str_html_pdf(get_string('signature',  'offlinequiz')).":", 1, 1, $direction);
         $this->Ln(5);
-        $this->Cell(20, 7, offlinequiz_str_html_pdf(get_string('group')).":", 0, 0, 'L');
+        $this->Cell($group, 7, offlinequiz_str_html_pdf(get_string('group')).":", 0, 0, $direction);
         $this->SetXY(34.4,  57.4);
 
         // Print boxes for groups.
@@ -155,21 +165,21 @@ class offlinequiz_answer_pdf extends offlinequiz_pdf {
         }
 
         $this->Ln(10);
-        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction1',  'offlinequiz')), 0, 'L');
+        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction1',  'offlinequiz')), 0, $direction);
         $this->Ln(1);
         $this->SetY(78);
         $this->Cell(42, 8, "", 0, 0, 'C');
         $this->Rect($this->GetX(),  $this->GetY(),  3.5,  3.5);
         $this->Cell(3.5, 3.5, "", 0, 1, 'C');
         $this->Ln(1);
-        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction2',  'offlinequiz')), 0, 'L');
+        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction2',  'offlinequiz')), 0, $direction);
         $this->Image("$CFG->dirroot/mod/offlinequiz/pix/kreuz.gif",  57.2,  78.2,  3.15,  0);   // JZ added 0.4 to y value.
         $this->Image("$CFG->dirroot/mod/offlinequiz/pix/ausstreichen.jpg", 56.8,  93,  4.1,  0);  // JZ added 0.4 to y value.
         $this->SetY(93.1);
         $this->Cell(42, 8, "", 0, 0, 'C');
         $this->Cell(3.5, 3.5, '', 1, 1, 'C');
         $this->Ln(1);
-        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction3',  'offlinequiz')), 0, 'L');
+        $this->MultiCell(115, 3, offlinequiz_str_html_pdf(get_string('instruction3',  'offlinequiz')), 0, $direction);
 
         $this->Line(109, 29, 130, 29);                                 // Rectangle for the teachers to sign.
         $this->Line(109, 50, 130, 50);
@@ -422,7 +432,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
 
     $pdf = new offlinequiz_question_pdf('P', 'mm', 'A4');
     $trans = new offlinequiz_html_translator();
-
+ 
     $title = offlinequiz_str_html_pdf($offlinequiz->name);
     if (!empty($offlinequiz->time)) {
         $title .= ": ".offlinequiz_str_html_pdf(userdate($offlinequiz->time));
@@ -432,6 +442,25 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
     $pdf->SetMargins(15, 28, 15);
     $pdf->SetAutoPageBreak(false, 25);
     $pdf->AddPage();
+
+    $lang = current_language();
+    if($lang == 'he'){
+        $pos_x = 130;
+        $pos_x_line = 56;
+        $line_length = 70;
+        $line_length_seg = 74 ;
+        $align_start = '<span style="text-align:right;float:right" >';
+        $align_end = '</span>';
+    }
+    else{
+        $pos_x = 58;
+        $pos_x_line = 76;
+        $line_length = 80;
+        $line_length_seg = 80;
+        $align_start = '';
+        $align_end = '';
+
+    }
 
     // Print title page.
     $pdf->SetFont('FreeSans', 'B', 14);
@@ -446,23 +475,24 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
         $pdf->SetFont('FreeSans', '', 10);
         // Line breaks to position name string etc. properly.
         $pdf->Ln(14);
-        $pdf->Cell(58, 10, offlinequiz_str_html_pdf(get_string('name')) . ":", 0, 0, 'R');
-        $pdf->Rect(76, 54, 80, 0.3, 'F');
+        $pdf->Cell($pos_x, 10, offlinequiz_str_html_pdf(get_string('name')) . ":", 0, 0, 'R');
+        $pdf->Rect($pos_x_line, 54, 80, 0.3, 'F');
         $pdf->Ln(10);
-        $pdf->Cell(58, 10, offlinequiz_str_html_pdf(get_string('idnumber', 'offlinequiz')) . ":", 0, 0, 'R');
-        $pdf->Rect(76, 64, 80, 0.3, 'F');
+        $pdf->Cell($pos_x, 10, offlinequiz_str_html_pdf(get_string('idnumber', 'offlinequiz')) . ":", 0, 0, 'R');
+        $pdf->Rect($pos_x_line, 64, $line_length, 0.3, 'F');
         $pdf->Ln(10);
         if ($offlinequiz->printstudycodefield) {
-            $pdf->Cell(58, 10, offlinequiz_str_html_pdf(get_string('studycode', 'offlinequiz')) . ":", 0, 0, 'R');
-            $pdf->Rect(76, 74, 80, 0.3, 'F');
+            $pdf->Cell($pos_x, 10, offlinequiz_str_html_pdf(get_string('studycode', 'offlinequiz')) . ":", 0, 0, 'R');
+            $pdf->Rect($pos_x_line, 74,$line_length , 0.3, 'F');
             $pdf->Ln(10);
         }
-        $pdf->Cell(58, 10, offlinequiz_str_html_pdf(get_string('signature', 'offlinequiz')) . ":", 0, 0, 'R');
+        $pdf->Cell($pos_x, 10, offlinequiz_str_html_pdf(get_string('signature', 'offlinequiz')) . ":", 0, 0, 'R');
         if ($offlinequiz->printstudycodefield) {
-            $pdf->Rect(76, 84, 80, 0.3, 'F');
+            $pdf->Rect($pos_x_line, 84, $line_length_seg, 0.3, 'F');
         } else {
-            $pdf->Rect(76, 74, 80, 0.3, 'F');
+            $pdf->Rect($pos_x_line, 74, $line_length_seg, 0.3, 'F');
         }
+
         $pdf->Ln(25);
         $pdf->SetFont('FreeSans', '', $offlinequiz->fontsize);
         $pdf->SetFontSize($offlinequiz->fontsize);
@@ -473,7 +503,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
             $oldy = $pdf->GetY();
 
             $pdf->checkpoint();
-            $pdf->writeHTMLCell(165, round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY(), $offlinequiz->pdfintro);
+            $pdf->writeHTMLCell(165, round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY(), $align_start.$offlinequiz->pdfintro.$align_end);
             $pdf->Ln();
 
             if ($pdf->is_overflowing()) {
@@ -488,13 +518,13 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                         foreach ($sentences as $sentence) {
                             $pdf->checkpoint();
                             $pdf->writeHTMLCell(165, round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY(),
-                                                $sentence . '<br/>');
+                                                $align_start.$sentence.$align_end . '<br/>');
                             $pdf->Ln();
                             if ($pdf->is_overflowing()) {
                                 $pdf->backtrack();
                                 $pdf->AddPage();
                                 $pdf->Ln(14);
-                                $pdf->writeHTMLCell(165, round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY(), $sentence);
+                                $pdf->writeHTMLCell(165, round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY(), $align_start.$sentence.$align_end);
                                 $pdf->Ln();
                             }
                         }
@@ -616,8 +646,14 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                         $answertext .= " (".round($question->options->answers[$answer]->fraction * 100)."%)";
                     }
 
-                    $html .= number_in_style($key, $question->options->answernumbering) . ') &nbsp; ';
-                    $html .= $answertext;
+                    if( $lang == 'he'){
+                        $html .= $answertext;
+                        $html .= $align_start.''.'&nbsp; ('.number_in_style ( $key, $question->options->answernumbering ).''.$align_end;
+                    }
+                    else{
+                        $html .= number_in_style ( $key, $question->options->answernumbering ) . ') &nbsp; ';
+                        $html .= $answertext;
+                    }
 
                     if ($correction) {
                         if ($question->options->answers[$answer]->fraction > 0) {
@@ -638,11 +674,17 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
             // Finally print the question number and the HTML string.
             if ($question->qtype == 'multichoice' || $question->qtype == 'multichoiceset') {
                 $pdf->SetFont('FreeSans', 'B', $offlinequiz->fontsize);
-                $pdf->Cell(4, round($offlinequiz->fontsize / 2), "$number)  ", 0, 0, 'R');
+                if($lang != 'he'){
+                    $pdf->Cell(4, round($offlinequiz->fontsize / 2), "$number)  ", 0, 0, 'R');
+                }
                 $pdf->SetFont('FreeSans', '', $offlinequiz->fontsize);
             }
-
-            $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+            if( $lang == 'he'){
+                $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $align_start.$number.') '.$html.''.$align_end);
+            }
+            else{
+                $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+            }
             $pdf->Ln();
 
             if ($pdf->is_overflowing()) {
@@ -653,11 +695,17 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                 // Print the question number and the HTML string again on the new page.
                 if ($question->qtype == 'multichoice' || $question->qtype == 'multichoiceset') {
                     $pdf->SetFont('FreeSans', 'B', $offlinequiz->fontsize);
-                    $pdf->Cell(4, round($offlinequiz->fontsize / 2), "$number)  ", 0, 0, 'R');
+                    if($lang != 'he'){
+                        $pdf->Cell(4, round($offlinequiz->fontsize / 2), "$number)  ", 0, 0, 'R');
+                    }
                     $pdf->SetFont('FreeSans', '', $offlinequiz->fontsize);
                 }
-
-                $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+                if( $lang == 'he'){
+                        $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $align_start.$number.') '.$html.''.$align_end);
+                }
+                else{
+                        $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+                }
                 $pdf->Ln();
             }
             $number += $questions[$currentquestionid]->length;
@@ -750,8 +798,14 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                         $answertext .= " (" . round ( $question->options->answers[$answer]->fraction * 100 ) . "%)";
                     }
 
-                    $html .= number_in_style ( $key, $question->options->answernumbering ) . ') &nbsp; ';
-                    $html .= $answertext;
+                    if( $lang == 'he'){
+                        $html .= $answertext;
+                        $html .= $align_start.''.'&nbsp; ('.number_in_style ( $key, $question->options->answernumbering ).''.$align_end;
+                    }
+                    else{
+                        $html .= number_in_style ( $key, $question->options->answernumbering ) . ') &nbsp; ';
+                        $html .= $answertext;
+                    }
 
                     if ($correction) {
                         if ($question->options->answers[$answer]->fraction > 0) {
@@ -770,11 +824,17 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
             // Finally print the question number and the HTML string.
             if ($question->qtype == 'multichoice' || $question->qtype == 'multichoiceset') {
                 $pdf->SetFont ( 'FreeSans', 'B', $offlinequiz->fontsize );
-                $pdf->Cell ( 4, round ( $offlinequiz->fontsize / 2 ), "$number)  ", 0, 0, 'R' );
+                if($lang != 'he'){
+                    $pdf->Cell ( 4, round ( $offlinequiz->fontsize / 2 ), "$number)  ", 0, 0, 'R' );
+                }
                 $pdf->SetFont ( 'FreeSans', '', $offlinequiz->fontsize );
             }
-
-            $pdf->writeHTMLCell ( 165, round ( $offlinequiz->fontsize / 2 ), $pdf->GetX (), $pdf->GetY () + 0.3, $html );
+            if( $lang == 'he'){
+                $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $align_start.$number.') '.$html.''.$align_end);
+            }
+            else{
+                $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+            }
             $pdf->Ln ();
 
             if ($pdf->is_overflowing ()) {
@@ -785,11 +845,17 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                 // Print the question number and the HTML string again on the new page.
                 if ($question->qtype == 'multichoice' || $question->qtype == 'multichoiceset') {
                     $pdf->SetFont ( 'FreeSans', 'B', $offlinequiz->fontsize );
-                    $pdf->Cell ( 4, round ( $offlinequiz->fontsize / 2 ), "$number)  ", 0, 0, 'R' );
+                    if($lang != 'he'){
+                        $pdf->Cell ( 4, round ( $offlinequiz->fontsize / 2 ), "$number)  ", 0, 0, 'R' );
+                    }
                     $pdf->SetFont ( 'FreeSans', '', $offlinequiz->fontsize );
                 }
-
-                $pdf->writeHTMLCell ( 165, round ( $offlinequiz->fontsize / 2 ), $pdf->GetX (), $pdf->GetY () + 0.3, $html );
+                if( $lang == 'he'){
+                        $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $align_start.$number.') '.$html.''.$align_end);
+                }
+                else{
+                        $pdf->writeHTMLCell(165,  round($offlinequiz->fontsize / 2), $pdf->GetX(), $pdf->GetY() + 0.3, $html);
+                }
                 $pdf->Ln ();
             }
             $number += $questions[$currentquestionid]->length;

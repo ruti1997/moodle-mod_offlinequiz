@@ -1,0 +1,32 @@
+!SESSION 2018-01-15 10:47:35.195 -----------------------------------------------
+eclipse.buildId=3.6.1.201410201044
+java.version=1.8.0_111
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  /home/ruti/Downloads/offlinequiz1.php
+Command-line arguments:  -os linux -ws gtk -arch x86_64 /home/ruti/Downloads/offlinequiz1.php
+
+!ENTRY org.eclipse.core.jobs 4 2 2018-01-15 10:48:39.334
+!MESSAGE An internal error occurred during: "Sending Analytics Ping ...".
+!STACK 0
+java.lang.NullPointerException
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler.getAnalyticsLogger(DefaultAnalyticsEventHandler.java:207)
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler.sendEventSync(DefaultAnalyticsEventHandler.java:224)
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler$1.run(DefaultAnalyticsEventHandler.java:75)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
+!SESSION 2018-01-15 14:09:08.723 -----------------------------------------------
+eclipse.buildId=3.6.1.201410201044
+java.version=1.8.0_111
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  /var/www/moodlegitruti/moodle/mod/offlinequiz/report/regrade/lang/en/offlinequiz_regrade.php
+Command-line arguments:  -os linux -ws gtk -arch x86_64 /var/www/moodlegitruti/moodle/mod/offlinequiz/report/regrade/lang/en/offlinequiz_regrade.php
+
+!ENTRY org.eclipse.core.jobs 4 2 2018-01-15 14:09:41.496
+!MESSAGE An internal error occurred during: "Sending Analytics Ping ...".
+!STACK 0
+java.lang.NullPointerException
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler.getAnalyticsLogger(DefaultAnalyticsEventHandler.java:207)
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler.sendEventSync(DefaultAnalyticsEventHandler.java:224)
+	at com.aptana.usage.internal.DefaultAnalyticsEventHandler$1.run(DefaultAnalyticsEventHandler.java:75)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:53)
