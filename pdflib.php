@@ -648,7 +648,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
 
                     if( $lang == 'he'){
                         $html .= $answertext;
-                        $html .= $align_start.''.'&nbsp; ('.number_in_style ( $key, $question->options->answernumbering ).''.$align_end;
+                        $html .= $align_start.''.'&nbsp; )'.number_in_style ( $key, $question->options->answernumbering ).''.$align_end;
                     }
                     else{
                         $html .= number_in_style ( $key, $question->options->answernumbering ) . ') &nbsp; ';
@@ -747,7 +747,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
             if (! empty ( $texfilter )) {
                 $questiontext = $texfilter->filter ( $questiontext );
             }
-
+            
             // Remove all HTML comments (typically from MS Office).
             $questiontext = preg_replace ( "/<!--.*?--\s*>/ms", "", $questiontext );
 
@@ -759,7 +759,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
 
             // Remove all class info from paragraphs because TCPDF won't use CSS.
             $questiontext = preg_replace ( '/<p[^>]+class="[^"]*"[^>]*>/i', "<p>", $questiontext );
-
+           
             $questiontext = $trans->fix_image_paths ( $questiontext, $question->contextid, 'questiontext', $question->id, 1, 300 );
 
             $html = '';
@@ -814,7 +814,7 @@ function offlinequiz_create_pdf_question(question_usage_by_activity $templateusa
                     }
                     $html .= "<br/>\n";
                 }
-
+            
                 $infostring = offlinequiz_get_question_infostring($offlinequiz, $question);
                 if ($infostring) {
                     $html .= '<br/>' . $infostring . '<br/>';
@@ -1017,9 +1017,9 @@ function offlinequiz_create_pdf_answer($maxanswers, $templateusage, $offlinequiz
         }
 
         $pdf->SetX(($col - 1) * ($pdf->colwidth) + $offsetx);
-
+        
         $pdf->Cell(5, 1, ($number + 1).")  ", 0, 0, 'R');
-
+        
         // Print one empty box for each answer.
         $x = $pdf->GetX();
         $y = $pdf->GetY();
